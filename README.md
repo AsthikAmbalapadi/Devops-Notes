@@ -1,2 +1,1 @@
-# Terraform
-Terraform Notes
+**TERRAFORM NOTES** [here](Terraform.md)
