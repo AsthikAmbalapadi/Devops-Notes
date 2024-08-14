@@ -546,7 +546,7 @@ Ansible playbooks are the core way to manage configurations and deployments acro
 
 ### **2. Deploying a Web Application**
 
-#### **Deploying a application to webserver group & appserver group using the same [scenario parameters](https://github.com/AsthikAmbalapadi/Devops-Notes/blob/main/Ansible/README.md##Scenario-Parameters)**
+#### **Deploying a application to webserver group & appserver group using the same [scenario parameters](https://github.com/AsthikAmbalapadi/Devops-Notes/blob/main/Ansible/README.md#scenario-parameters)**
 
 **Step 1**: **Create Directory for Playbooks**
 
