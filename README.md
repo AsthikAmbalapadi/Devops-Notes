@@ -1,6 +1,3 @@
-**TERRAFORM NOTES** [here](Terraform)
-  - [Introduction](Terraform/Terraform.md)
-  - [Use Case 1](Terraform/UseCase-1/README.md)
-  - [Use Case 2](Terraform/UseCase-2/README.md)
-  - [Use Case 3](Terraform/UseCase-3/README.md)
-  - [Use Case 4](Terraform/UseCase-4/README.md)
+**TERRAFORM NOTES** [here](Terraform/README.md)
+
+**ANSIBLE NOTES** [here](Ansible/README.md)
