@@ -393,6 +393,20 @@ Ansible integrates seamlessly with other DevOps tools to enhance automation and 
 
 ## **Scenario 2: Deploying application using Ad-Hoc Commands**
 
+### **Scenario Parameters**:
+- For group `webserver`,
+	- Go to the location /var/www/html, git clone the repository, https://github.com/AsthikDev/finexo-web-app.git
+	- Install httpd from ansible control node to webserver target node & start httpd service & verify it.
+	- Change the HTTPD conf file to listen to port 80 & restart the httpd service.
+	- Verify the webserver is accessible from port 80.
+
+- For group `appserver`,
+	- Create directory /var/www/app & give required read, write & execute permissions.
+	- Go to the location /var/www/app, git clone the repository, https://github.com/AsthikDev/mediplus-web-app.git
+	- Install httpd from ansible control node to appserver target node & start httpd service & verify it.
+	- Change the HTTPD conf file to listen to port 443, change the root location to /var/www/app & the index file to app.html & restart the httpd service.
+	- Verify the appserver is accessible from port 443.
+
 ### **1. Executing Ansible Ad-Hoc Commands on webserver & appserver group**
 
 #### **For Webserver Group**
@@ -532,7 +546,7 @@ Ansible playbooks are the core way to manage configurations and deployments acro
 
 ### **2. Deploying a Web Application**
 
-#### **Deploying a application to webserver group & appserver group mentioned in inventory file**
+#### **Deploying a application to webserver group & appserver group using the same [scenario parameters](https://github.com/AsthikAmbalapadi/Devops-Notes/blob/main/Ansible/README.md##Scenario-Parameters)**
 
 **Step 1**: **Create Directory for Playbooks**
 
