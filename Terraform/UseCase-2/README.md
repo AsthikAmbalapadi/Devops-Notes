@@ -361,3 +361,5 @@ variable "allowed_cidr_blocks" {
 In this use case, we have effectively divided the Terraform configuration into multiple files to achieve a more organized and maintainable infrastructure setup. The separation into `project.tf`, `terraform.tfvars`, and `variable.tf` enhances clarity and allows for easier management of different aspects of the configuration. 
 
 By adopting these best practices and utilizing the separation of concerns, you can maintain a more scalable and adaptable infrastructure setup. Always ensure that sensitive information is handled securely and follow best practices for modular design and variable management.
+
+---

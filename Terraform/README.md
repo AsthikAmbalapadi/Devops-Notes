@@ -1,5 +1,5 @@
-  - [Introduction](Introduction/README.md)
-  - [Use Case 1](UseCase-1/README.md)
-  - [Use Case 2](UseCase-2/README.md)
-  - [Use Case 3](UseCase-3/README.md)
-  - [Use Case 4](UseCase-4/README.md)
+- [Introduction](Introduction/README.md) 📚
+- [Use Case 1](UseCase-1/README.md) 📚
+- [Use Case 2](UseCase-2/README.md) 📚
+- [Use Case 3](UseCase-3/README.md) 📚
+- [Use Case 4](UseCase-4/README.md) 📚

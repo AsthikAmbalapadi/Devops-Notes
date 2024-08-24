@@ -302,3 +302,5 @@ We utilized separate Terraform files to:
 - **Enable Flexibility**: `variables.tf` and `terraform.tfvars` facilitate dynamic and environment-specific configurations, promoting flexibility and ease of management.
 
 **Key Takeaway**: By modularizing your Terraform code and adhering to best practices for state management and configuration, you ensure a secure, maintainable, and scalable infrastructure setup that can efficiently adapt to different environments.
+
+---
