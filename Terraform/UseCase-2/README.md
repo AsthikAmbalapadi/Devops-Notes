@@ -1,100 +1,88 @@
-Let's break down the provided Terraform code and explain each part in detail, covering the resources, commands, use cases, advantages, disadvantages, and best practices.
+### **Introduction** 🌟
 
-### 1. **Provider Configuration**
+In modern infrastructure management with Terraform, organizing your code into multiple files is a common best practice. This approach not only enhances readability and maintainability but also promotes a more scalable and modular infrastructure setup. In this use case, we have split the Terraform configuration into three distinct files:
+
+1. **`project.tf`**: Contains the core infrastructure resources.
+2. **`terraform.tfvars`**: Provides values for the variables used in `project.tf`.
+3. **`variable.tf`**: Defines the variables used in the Terraform configuration.
+
+This separation helps in managing different aspects of your infrastructure setup efficiently. Let’s delve into each file to understand their purpose and the detailed implementation.
+
+**Use Case for Bifurcation** 🔄:
+Separating this file into multiple parts allows for clear organization of different aspects of infrastructure management. This modular approach:
+
+1. **Improves Readability** 📚: Each section is focused on a specific aspect, making it easier to understand and manage.
+2. **Facilitates Collaboration** 🤝: Different team members can work on different files without conflicts.
+3. **Enables Reusability** 🔁: Modular components can be reused across different projects or environments.
+
+---
+
+### **File 1: `project.tf`** 🌍
+
+This file is the heart of your Terraform configuration. It defines the core resources and their relationships.
+
 ```hcl
+# Specify the AWS provider and region
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
-```
-- **Explanation**: This block specifies the AWS provider and sets the region to `us-east-1`. The provider is responsible for interacting with the AWS API and managing the resources defined in the Terraform configuration.
-- **Best Practice**: Use variables for region and other provider-specific configurations to make your code more flexible and reusable.
 
-### 2. **Creating a VPC**
-```hcl
+# Create a VPC with a specified CIDR block
 resource "aws_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
   tags = {
     Name = "My VPC"
   }
 }
-```
-- **Explanation**: This block creates a Virtual Private Cloud (VPC) with a CIDR block of `10.0.0.0/16`. The VPC is the fundamental building block of your network infrastructure in AWS.
-- **Use Case**: When you need to create an isolated network environment in AWS.
-- **Best Practice**: Use tags to identify and manage resources easily. Consider defining the CIDR block as a variable for flexibility.
 
-### 3. **Creating a Public Subnet**
-```hcl
+# Create a public subnet within the VPC
 resource "aws_subnet" "public_subnet" {
   vpc_id             = aws_vpc.vpc.id
-  cidr_block         = "10.0.1.0/24"
-  availability_zone  = "us-east-1a"
+  cidr_block         = var.public_subnet_cidr
+  availability_zone  = var.public_subnet_az
   tags = {
     Name = "Public Subnet"
   }
 }
-```
-- **Explanation**: This block creates a public subnet within the VPC in the specified availability zone (`us-east-1a`) with a CIDR block of `10.0.1.0/24`.
-- **Use Case**: Public subnets are used for resources that need to be accessible from the internet, such as web servers.
-- **Best Practice**: Use variables for availability zones and CIDR blocks to increase flexibility.
 
-### 4. **Creating a Private Subnet**
-```hcl
+# Create a private subnet within the VPC
 resource "aws_subnet" "private_subnet" {
   vpc_id             = aws_vpc.vpc.id
-  cidr_block         = "10.0.2.0/24"
-  availability_zone  = "us-east-1b"
+  cidr_block         = var.private_subnet_cidr
+  availability_zone  = var.private_subnet_az
   tags = {
     Name = "Private Subnet"
   }
 }
-```
-- **Explanation**: This block creates a private subnet within the VPC in a different availability zone (`us-east-1b`) with a CIDR block of `10.0.2.0/24`.
-- **Use Case**: Private subnets are used for resources that do not require direct internet access, such as databases.
-- **Best Practice**: Ensure separation of concerns by placing different types of resources (public-facing vs. internal) in different subnets.
 
-### 5. **Creating an Internet Gateway**
-```hcl
+# Create an Internet Gateway for the VPC
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = "my IGW"
   }
 }
-```
-- **Explanation**: An Internet Gateway (IGW) is created and attached to the VPC, allowing resources in the public subnet to connect to the internet.
-- **Use Case**: Needed for internet-facing resources like web servers.
-- **Best Practice**: Attach an Internet Gateway only to VPCs that require public internet access. Use tags to manage multiple gateways.
 
-### 6. **Allocating an Elastic IP**
-```hcl
+# Allocate an Elastic IP for the NAT Gateway
 resource "aws_eip" "elastic_ip" {
   domain = "vpc"
   tags = {
     Name = "Elastic IP 1"
   }
 }
-```
-- **Explanation**: This block allocates an Elastic IP (EIP) for use with a NAT Gateway. Elastic IPs are static IP addresses that are allocated for use in a VPC.
-- **Use Case**: When you need a static IP address that can be reassigned between different instances or NAT Gateways.
-- **Best Practice**: Use EIPs sparingly as they are a limited resource. Use tags to keep track of IP allocations.
 
-### 7. **Creating a NAT Gateway**
-```hcl
+# Create a NAT Gateway in the public subnet
 resource "aws_nat_gateway" "public_nat" {
   subnet_id     = aws_subnet.public_subnet.id
   allocation_id = aws_eip.elastic_ip.id
   tags = {
     Name = "NAT Gateway"
   }
+
   depends_on = [aws_internet_gateway.igw]
 }
-```
-- **Explanation**: This block creates a NAT Gateway in the public subnet, allowing resources in private subnets to access the internet without exposing them directly to the public internet.
-- **Use Case**: Necessary for private instances that need to download updates or access external resources.
-- **Best Practice**: Ensure that the NAT Gateway is placed in a public subnet. Use `depends_on` to manage resource dependencies and ensure correct order of creation.
 
-### 8. **Creating a Public Route Table**
-```hcl
+# Create a public route table for the VPC
 resource "aws_route_table" "public_route" {
   vpc_id = aws_vpc.vpc.id
 
@@ -112,13 +100,8 @@ resource "aws_route_table" "public_route" {
     Name = "Public Route Table"
   }
 }
-```
-- **Explanation**: A route table is created for the public subnet. It includes a route for the VPC's local traffic and a route that directs internet-bound traffic to the Internet Gateway.
-- **Use Case**: Public route tables are used for subnets that need to access the internet.
-- **Best Practice**: Clearly differentiate between public and private route tables using names and tags. Ensure that only necessary subnets use the public route table.
 
-### 9. **Creating a Private Route Table**
-```hcl
+# Create a private route table for the VPC
 resource "aws_route_table" "private_route" {
   vpc_id = aws_vpc.vpc.id
 
@@ -136,35 +119,20 @@ resource "aws_route_table" "private_route" {
     Name = "Private Route Table"
   }
 }
-```
-- **Explanation**: This block creates a route table for the private subnet. It includes a local route and a route that directs internet-bound traffic through the NAT Gateway.
-- **Use Case**: Private route tables are used for subnets that need outbound internet access but are not exposed directly to the internet.
-- **Best Practice**: Use separate route tables for public and private subnets to ensure proper routing of traffic. Use `depends_on` for dependencies when necessary.
 
-### 10. **Associating the Public Route Table with the Public Subnet**
-```hcl
+# Associate the public route table with the public subnet
 resource "aws_route_table_association" "public_subnet_route" {
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.public_route.id
 }
-```
-- **Explanation**: This block associates the public route table with the public subnet, ensuring that the routes defined in the table apply to this subnet.
-- **Use Case**: Necessary to apply the correct routing rules to the public subnet.
-- **Best Practice**: Always verify route table associations to ensure that they match the intended subnets.
 
-### 11. **Associating the Private Route Table with the Private Subnet**
-```hcl
+# Associate the private route table with the private subnet
 resource "aws_route_table_association" "private_subnet_route" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_route.id
 }
-```
-- **Explanation**: This block associates the private route table with the private subnet, ensuring that the routes defined in the table apply to this subnet.
-- **Use Case**: Necessary to apply the correct routing rules to the private subnet.
-- **Best Practice**: Regularly review route table associations, especially when making changes to the network architecture.
 
-### 12. **Creating a Security Group**
-```hcl
+# Create a security group allowing SSH, HTTP, and ICMP traffic
 resource "aws_security_group" "allow_ssh_http_icmp" {
   name        = "Allow SSH, HTTP & ICMP"
   description = "Allow SSH, HTTP & ICMP traffic to CIDR blocks"
@@ -175,7 +143,7 @@ resource "aws_security_group" "allow_ssh_http_icmp" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_cidr_blocks
   }
 
   ingress {
@@ -183,7 +151,7 @@ resource "aws_security_group" "allow_ssh_http_icmp" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_cidr_blocks
   }
 
   ingress {
@@ -191,17 +159,13 @@ resource "aws_security_group" "allow_ssh_http_icmp" {
     from_port   = -1  # ICMP doesn't use ports, so use -1
     to_port     = -1  # ICMP doesn't use ports, so use -1
     protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_cidr_blocks
   }
 
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0
-    to_port     =
-
-
-
- 0
+    to_port     = 0
     protocol    = "-1"  # "-1" means all protocols
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -210,16 +174,190 @@ resource "aws_security_group" "allow_ssh_http_icmp" {
     Name = "SSH, HTTP & ICMP"
   }
 }
-```
-- **Explanation**: This block creates a security group that allows inbound SSH, HTTP, and ICMP traffic from any IP address, and allows all outbound traffic.
-- **Use Case**: Commonly used for web servers that need to be accessed via SSH and HTTP.
-- **Best Practice**: Limit the CIDR blocks for SSH access to known IP addresses instead of allowing `0.0.0.0/0`, which opens it to the entire internet, posing a security risk.
 
-### 13. **Creating a TLS Private Key**
-```hcl
+# Create a new private key
 resource "tls_private_key" "my_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
+
+# Create a new key pair in AWS using the generated public key
+resource "aws_key_pair" "generated_key" {
+  key_name   = var.key_name
+  public_key = tls_private_key.my_key.public_key_openssh
+
+  tags = {
+    Name = "Generated Key"
+  }
+}
+
+# If the Private Key to be stored locally
+resource "local_file" "private_key_pem" {
+  content  = tls_private_key.my_key.private_key_pem
+  filename = var.private_key_path
+  depends_on = [aws_key_pair.generated_key]
+}
+
+# Create an EC2 instance in the public subnet using the generated key pair or reuse existing key pair
+resource "aws_instance" "webserver" {
+  ami                       = var.ami_id
+  instance_type             = var.instance_type
+  key_name                  = aws_key_pair.generated_key.key_name
+  subnet_id                 = aws_subnet.public_subnet.id
+  security_groups           = [aws_security_group.allow_ssh_http_icmp.id]
+  associate_public_ip_address = true
+  user_data                 = file(var.user_data_path)
+
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 10
+  }
+
+  tags = {
+    Name = "Webserver"
+  }
+}
 ```
-- **Explanation**: This block generates a private key using the RSA algorithm with a key length of 4096 bits. This key can be used for securing communications.
+
+**Detailed Explanation** 🧐
+
+- **Provider Configuration** 🌐: Specifies AWS as the cloud provider and sets the region using a variable.
+- **VPC** 🌍: Defines a Virtual Private Cloud (VPC) with a specified CIDR block, providing a private network space.
+- **Public and Private Subnets** 🌳: Creates public and private subnets within the VPC, each in different availability zones for high availability.
+- **Internet Gateway (IGW)** 🌐: Allows the VPC to access the internet.
+- **NAT Gateway** 🌐: Provides internet access for instances in private subnets by routing traffic through an Elastic IP.
+- **Route Tables** 🛤️: Defines routing rules for both public and private subnets, ensuring correct traffic flow.
+- **Security Groups** 🔐: Configures inbound and outbound rules for instance traffic, allowing SSH, HTTP, and ICMP while restricting access as needed.
+- **Key Pair** 🔑: Generates an SSH key pair for secure access to EC2 instances.
+- **EC2 Instance** 🖥️: Launches an EC2 instance in the public subnet using the specified AMI and instance type.
+
+**Best Practices** 🏆:
+- **Modular Design**: Split configurations into logical sections for better readability and maintainability.
+- **Security**: Securely handle sensitive data such as private keys and avoid hardcoding credentials.
+
+---
+
+### **File 2: `terraform.tfvars`** 📋
+
+This file provides specific values for the variables defined in `variable.tf`, enabling flexible and customizable Terraform configurations.
+
+```hcl
+aws_region          = "us-east-1"
+vpc_cidr            = "10.0.0.0/16"
+public_subnet_cidr  = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+public_subnet_az    = "us-east-1a"
+private_subnet_az   = "us-east-1b"
+allowed_cidr_blocks = ["0.0.0.0/0"]
+key_name            = "key"
+private_key_path    = "C:/Users/Asthik Creak/Desktop/Testing/Terraform/key_local.pem"
+ami_id              = "ami-0b72821e2f351e396"
+instance_type       = "t2.medium"
+user_data_path      = "C:/Users/Asthik Creak/Desktop/Testing/Terraform/user_data.txt"
+```
+
+**Detailed Explanation** 🧐
+
+- **Variable Values** 🎯: Assigns values to the variables used in `project.tf`, allowing for different configurations without altering the core code.
+- **Paths and Identifiers** 🛠️: Specifies paths for storing keys and user data files, and provides identifiers for the AWS resources.
+
+**Best Practices** 🏆:
+- **Separation of Concerns**: Keep variable values in a separate file to isolate them from the core configuration, making it easier to update values without modifying the main code.
+- **Sensitive Data Handling**: Avoid exposing sensitive data in version-controlled files; use secure storage solutions.
+
+---
+
+### **File 3: `variable.tf`** 🔧
+
+Defines all the variables used in the Terraform configuration, including their types and default values.
+
+```hcl
+variable "aws_region" {
+  description = "The AWS region to deploy to"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidr" {
+  description = "CIDR block for the public subnet"
+  type        = string
+  default     = "10.0.1.0/24"
+}
+
+variable "public_subnet_az" {
+  description = "Availability zone for the public subnet"
+  type        = string
+  default     = "us-east-1a"
+}
+
+variable "private_subnet_cidr" {
+  description = "CIDR block for the private subnet"
+  type        = string
+  default     = "10.0.2.0/24"
+}
+
+variable "private_subnet_az" {
+  description = "Availability zone for the private subnet"
+  type        = string
+  default     = "us-east-1b"
+}
+
+variable "key_name" {
+  description = "The name of the key pair"
+  type        = string
+  default     = "my-key"
+}
+
+variable "ami_id" {
+  description = "The AMI ID for the EC2 instance"
+  type        = string
+  default     = "ami-0b72821e2f351e396"
+}
+
+variable "instance_type" {
+  description = "The instance type for the EC2 instance"
+  type        = string
+  default     = "t2.medium"
+}
+
+variable "private_key_path" {
+  description = "Path to store the private key file"
+  type        = string
+  default     = "key_local.pem"
+}
+
+variable "user_data_path" {
+  description = "Path to the user data file"
+  type        = string
+  default     = "user_data.txt"
+}
+
+variable "allowed_cidr_blocks" {
+  description = "List of allowed CIDR blocks for security group rules"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+```
+
+**Detailed Explanation** 🧐
+
+- **Variable Definitions** 📜: Specifies the variables used across the Terraform files, including their types, descriptions, and default values.
+- **Customization** 🎨: Allows for easy customization of the infrastructure setup by changing the variable values without modifying the core configuration.
+
+**Best Practices** 🏆:
+- **Documentation**: Provide clear descriptions for each variable to make it easier for users to understand their purpose.
+- **Defaults**: Set sensible default values to simplify initial setup and provide a baseline configuration.
+
+---
+
+### **Summary** 📝
+
+In this use case, we have effectively divided the Terraform configuration into multiple files to achieve a more organized and maintainable infrastructure setup. The separation into `project.tf`, `terraform.tfvars`, and `variable.tf` enhances clarity and allows for easier management of different aspects of the configuration. 
+
+By adopting these best practices and utilizing the separation of concerns, you can maintain a more scalable and adaptable infrastructure setup. Always ensure that sensitive information is handled securely and follow best practices for modular design and variable management.
