@@ -1,4 +1,4 @@
-## Introduction 🌟
+### Introduction 🌟
 
 This Terraform configuration establishes a foundational AWS infrastructure, including a Virtual Private Cloud (VPC), subnets, internet connectivity, and an EC2 instance. The following sections detail each component, highlighting their functions, best practices, and key points to ensure an optimal and secure setup.
 
@@ -407,7 +407,7 @@ output "private_key_pem" {
 
 ---
 
-## Summary 📚
+### Summary 📚
 
 This Terraform configuration provides a comprehensive setup for a basic AWS environment, including VPC creation, subnet setup, internet and NAT gateways, security groups, and an EC2 instance. By following best practices and understanding each component's role, you can build a robust, scalable, and secure infrastructure on AWS. Regularly review and update configurations to adapt to evolving needs and security requirements.
 

@@ -1,7 +1,3 @@
-Here's your content with relevant emojis and icons added:
-
----
-
 ### Terraform: Introduction, Structure, and Best Practices 
 
 #### Introduction to Terraform 
@@ -262,9 +258,7 @@ resource "aws_security_group" "example" {
   ingress {
     from_port   = 22
     to_port     = 22
-    protocol   
-
- = "tcp"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -320,8 +314,6 @@ Terraform is a powerful IaC tool that provides a consistent and efficient way to
 - **Best Practices**: Follow version control, remote state management, and other best practices for effective infrastructure management.
 
 ---
-
-Here's the updated section with relevant emojis and icons added:
 
 ### Terraform State File: A Detailed Explanation 
 
@@ -416,8 +408,6 @@ The Terraform state file can contain sensitive information such as credentials, 
 In conclusion, the Terraform state file is a cornerstone of how Terraform manages infrastructure. Understanding how it works, securing it, and following best practices are crucial for effective infrastructure management. 🌟
 
 ---
-
-Here are the added emojis and icons for the Ansible markdown notes. I've included relevant icons and emojis for headings, advantages, disadvantages, and best practices without modifying the actual content:
 
 ### Let's go through these few important topics / commands one by one:
 
@@ -645,8 +635,6 @@ Here are the added emojis and icons for the Ansible markdown notes. I've include
    - **Best Practice**:
      - Always review the output of `terraform plan` before running `terraform apply` to understand what changes will be made.
      - Use `terraform apply` in automated pipelines with caution, particularly for production environments.
-
-Here’s your content with added emojis to make it more engaging:
 
 ---
 
@@ -887,9 +875,7 @@ Here’s your content with added emojis to make it more engaging:
      terraform {
        backend "s3" {
          bucket = "project1-terraform-state"
-         key   
-
- = "state/project1.tfstate"
+         key = "state/project1.tfstate"
          region = "us-west-2"
        }
      }
@@ -1156,22 +1142,6 @@ Here’s your content with added emojis to make it more engaging:
      }
      ```
 
-   - **Example 2**:
-     ```hcl
-     module "vpc" {
-       source = "terraform-aws-modules/vpc/aws"
-       version = "3.14.0"
-     
-       name = "my-vpc"
-       cidr = "10.0.0.0/16"
-     
-
-
-       enable_dns_support = true
-       enable_dns_hostnames = true
-     }
-     ```
-
    - **Advantages**: ✅
      - Saves time by using pre-configured, community-tested modules.
      - Can serve as a starting point for custom module development.
@@ -1218,10 +1188,6 @@ Here’s your content with added emojis to make it more engaging:
 
    - **Best Practice**: ⭐
      - Follow a consistent directory and file naming convention. Separate configurations logically to enhance clarity and maintainability.
-
-Here's the updated section with relevant emojis:
-
----
 
 #### 25. **Terraform community modules**
 
