@@ -3856,7 +3856,7 @@ Detailed explanation of the final directory structure and files after running th
    - Copy the WAR file to the Tomcat `webapps` directory.
    - **Command**:
      ```bash
-     cp ~/advanced-java-webapp/target/your-app.war /opt/apache-tomcat-8.0.1/webapps/
+     cp ~/advanced-java-webapp/target/advanced-java-webapp.war /opt/apache-tomcat-8.0.1/webapps/
      ```
    - Tomcat automatically deploys the WAR file once copied & the service is started.
 
