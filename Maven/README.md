@@ -845,13 +845,13 @@ This structure ensures a clean separation between source files, compiled classes
 
 Setting up a development environment on Amazon Linux 2023 requires careful attention to detail, especially when installing Java and Maven. When setting up Java and Maven in an Amazon Linux 2023 environment, you have two main options for Java Development Kits (JDK): OpenJDK and Oracle JDK.
 
-#### Choosing Between OpenJDK and Oracle JDK ☕️
+#### 1. Choosing Between OpenJDK and Oracle JDK ☕️
 
 Java developers can choose between OpenJDK (an open-source implementation of the Java Platform) and Oracle JDK (a commercially supported, proprietary implementation by Oracle) depending on your project's requirements. It's essential to decide which JDK to use based on licensing, support, and specific features required.
 
 **Important Note**: You should not install both OpenJDK and Oracle JDK simultaneously on the same machine. Doing so can lead to conflicts in the Java runtime environment, causing unexpected behavior in Java applications.
 
-#### Downloading JDKs Using `wget` 📥
+#### 2. Downloading JDKs Using `wget` 📥
 
 **Connect to Your AWS Instance**: Log in to your Amazon Linux 2023 instance as the `root user` or a user with `sudo` privileges.
 
@@ -938,7 +938,7 @@ Java developers can choose between OpenJDK (an open-source implementation of the
 - **Isolation**: The `/opt` directory is designated for installing optional software packages that are not part of the default operating system installation. It’s an ideal location for external software. This keeps them separate from system-managed files in directories like `/usr`.
 - **Control**: By installing in `/opt`, administrators have more control over software versions and configurations, preventing package managers from overwriting custom installations.
 
-#### Verify Installation and Check Versions ✅
+#### 6. Verify Installation and Check Versions ✅
 
 1. **Check Java Version**:
    - After extracting the JDK, check the installed Java version.
@@ -971,7 +971,7 @@ Java developers can choose between OpenJDK (an open-source implementation of the
    OS name: "linux", version: "6.1.102-111.182.amzn2023.x86_64", arch: "amd64", family: "unix"
    ```
 
-#### 6. Configuring Environment Variables 🌐
+#### 7. Configuring Environment Variables 🌐
 
 #### What is `/etc/profile` ? 🗒️
 
@@ -1033,7 +1033,7 @@ To ensure the environment variables are set for all future sessions:
    mvn -version   #For Maven
    ```
 
-#### 7. What is an Archetype in Maven? 🧩
+#### 8. What is an Archetype in Maven? 🧩
 
 - **Archetype**: A Maven archetype is a template project provided by Maven to help developers quickly set up a new project with a standard directory structure, a basic `pom.xml`, and other necessary files. This ensures consistency and saves time when starting new projects.
 
