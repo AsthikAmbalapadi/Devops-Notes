@@ -3553,7 +3553,7 @@ mvn clean install
   ```
 
 #### Final Project Directory Structure with Artifacts 📂
-
+```BASIC
 ~/advanced-java-webapp
 ├── pom.xml
 ├── src
@@ -3641,6 +3641,7 @@ mvn clean install
                     │   └── BlogPostTest.class
                     └── servlet
                         └── HomeServletTest.class
+```
 
 
 Detailed explanation of the final directory structure and files after running the Maven build for `advanced-java-webapp` project:
